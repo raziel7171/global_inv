@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class _MenuProvider {
@@ -15,6 +16,14 @@ class _MenuProvider {
 
     return opciones;
   }
+}
+
+Widget loadImage(
+    BuildContext context, String imgName, double imgHeight, double imgWidth) {
+  return Image(
+      image: AssetImage('lib/src/assets/images/' + imgName + '.png'),
+      height: imgHeight,
+      width: imgWidth);
 }
 
 final menuProvider = new _MenuProvider();

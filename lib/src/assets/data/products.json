@@ -6,33 +6,45 @@
 		"productName" : "Shampoo",
 		"productPrice" :  10000, 
 		"quantity" : 15,
-		"icon": "add_alert"
+		"icon": "add_shopping_cart",
+		"route": "product",
+		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     }, {
        "productID" : "KL2432",
-		"productName" : "pack of cigarettes",
+		"productName" : "Cigarettes",
 		"productPrice" :  8000, 
 		"quantity" : 20,
-		"icon": "add_alert"
+		"icon": "add_shopping_cart",
+		"route": "product",
+		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
         "productID" : "KL2432",
 		"productName" : "Lighter",
 		"productPrice" :  1000, 
 		"quantity" : 30,
-		"icon": "add_alert"
+		"icon": "add_shopping_cart",
+		"route": "product",
+		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
         "productID" : "KL2432",
 		"productName" : "Pen",
 		"productPrice" :  1000, 
 		"quantity" : 100,
-		"icon": "add_alert"
+		"icon": "add_shopping_cart",
+		"route": "product",
+		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
         "productID" : "KL2432",
 		"productName" : "Earphones",
-		"productPrice" :  1000, 
+		"productPrice" :  20000, 
 		"quantity" : 13,
-		"icon": "add_alert"
-    }]
+		"icon": "add_shopping_cart",
+		"route": "product",
+		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    }
+
+]
 }
