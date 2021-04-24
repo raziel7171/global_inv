@@ -1,6 +1,6 @@
 # global_inv
 
-A new Flutter project.
+Desarrollo de aplicación de inventarios.
 
 ## Getting Started
 
@@ -14,3 +14,5 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+<img src="https://noticiasmanizales.com/wp-content/uploads/2021/04/g3-177x300.png" alt="" width="177" height="300" /> <img src="https://noticiasmanizales.com/wp-content/uploads/2021/04/g2-180x300.png" alt="" width="180" height="300" /> <img  src="https://noticiasmanizales.com/wp-content/uploads/2021/04/g1-203x300.png" alt="" width="203" height="300" />
