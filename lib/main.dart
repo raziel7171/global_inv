@@ -8,14 +8,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Componentes App',
-      initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => HomePage(),
-        // 'product': (BuildContext context) => ProductPage(),
-        ProductPage.routeName: (context) => ProductPage(),
-      },
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Componentes App',
+        initialRoute: '/',
+        routes: <String, WidgetBuilder>{
+          '/': (BuildContext context) => HomePage(),
+          // 'product': (BuildContext context) => ProductPage(),
+          ProductPage.routeName: (context) => ProductPage(),
+        });
   }
 }
