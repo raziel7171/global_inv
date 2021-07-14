@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => HomePage(),
           // 'product': (BuildContext context) => ProductPage(),
+
           ProductPage.routeName: (context) => ProductPage(),
           AddProductForm.routeName: (context) => AddProductForm(),
         });

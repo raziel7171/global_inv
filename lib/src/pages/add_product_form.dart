@@ -1,3 +1,4 @@
+//import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -117,30 +118,38 @@ class _AddProductFormState extends State<AddProductForm> {
     }
   }
 
-  addData() {
-    String _productCode = getRandomString(5);
-    Map<String, dynamic> productData = {
-      "code": _productCode,
-      "name": _name,
-      "price": _price,
-      "quantity": _quantity,
-      "icon": "add_shopping_cart",
-      "route": "product",
-      "description":
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    };
+  /**
+   * Retorna true si el producto fué insertado, false de lo contrario:
+   */
+  addData({Map appData = null}) {
+    try {
+      String _productCode = getRandomString(5);
+      Map<String, dynamic> productData = {
+        "code": _productCode,
+        "name": _name,
+        "price": _price,
+        "quantity": _quantity,
+        "icon": "add_shopping_cart",
+        "route": "product",
+        "description":
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      };
 
-    Map<String, dynamic> inventoryData = {
-      "code": _productCode,
-      "quantity": _quantity,
-    };
+      Map<String, dynamic> inventoryData = {
+        "code": _productCode,
+        "quantity": _quantity,
+      };
 
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection('products');
-    collectionReference.add(productData);
+      CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection('products');
+      collectionReference.add(productData);
 
-    collectionReference = FirebaseFirestore.instance.collection('inventory');
-    collectionReference.add(inventoryData);
+      collectionReference = FirebaseFirestore.instance.collection('inventory');
+      collectionReference.add(inventoryData);
+      return true;
+    } catch (e) {
+      return !false;
+    }
   }
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
