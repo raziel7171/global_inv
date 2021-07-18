@@ -1,10 +1,8 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:global_inv/src/objects/product.dart';
+import 'package:global_inv/src/objects/productModel.dart';
 import 'package:global_inv/src/pages/add_product_form.dart';
-import 'package:global_inv/src/pages/alert_page.dart';
 import 'package:global_inv/src/pages/product_page.dart';
-import 'package:global_inv/src/providers/menu_provider.dart';
+import 'package:global_inv/src/providers/products_provider.dart';
 import 'package:global_inv/src/utils/icon_string_util.dart';
 
 import 'add_product_form.dart';
@@ -17,7 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Product> productList = [];
+  ProductsProvider productsProvider = new ProductsProvider();
+  List<ProductModel> productList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +37,31 @@ class _HomePageState extends State<HomePage> {
 
   Widget _lista() {
     return FutureBuilder(
-      future: menuProvider.cargarData(),
-      initialData: [],
-      builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-        return ListView(
-          children: _listaItems(snapshot.data, context),
-        );
+      future: productsProvider.readProducts(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+        if (snapshot.hasData) {
+          final productsList = snapshot.data;
+          return ListView.builder(
+              itemCount: productsList.length,
+              itemBuilder: (context, i) => _showProductWidget(productsList[i]));
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _showProductWidget(ProductModel product) {
+    return ListTile(
+      title: Text(product.name),
+      subtitle: Text(product.price.toString() + "＄"),
+      leading: Text(product.quantity.toString() + 'x'),
+      trailing: IconButton(
+          icon: getIcon(product.icon), onPressed: () => product.quantity - 1),
+      onTap: () {
+        Navigator.pushNamed(context, ProductPage.routeName,
+            arguments: ProductArguments(product.name, product));
       },
     );
   }

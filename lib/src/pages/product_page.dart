@@ -26,19 +26,27 @@ class _ProductPageState extends State<ProductPage> {
               children: [
                 loadImage(context, args.name, 100, 100),
                 VerticalDivider(),
-                Text(args.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                VerticalDivider(),
-                Text.rich(TextSpan(
-                    text: 'Precio: ',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: args.specificProduct['price'].toString() + "＄",
-                          style:
-                              TextStyle(color: Colors.green.withOpacity(0.8)))
-                    ]))
+                Expanded(
+                  flex: 5,
+                  child: Container(
+                    child: Text.rich(TextSpan(
+                        text: args.specificProduct.name + "\n\n",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'Precio: ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text:
+                                        args.specificProduct.price.toString() +
+                                            "＄",
+                                    style: TextStyle(
+                                        color: Colors.green.withOpacity(0.8)))
+                              ])
+                        ])),
+                  ),
+                ),
               ],
             ),
             Divider(),
@@ -48,7 +56,7 @@ class _ProductPageState extends State<ProductPage> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                   children: <TextSpan>[
                     TextSpan(
-                        text: args.specificProduct['description'],
+                        text: args.specificProduct.description,
                         style: TextStyle(fontWeight: FontWeight.normal))
                   ])),
             ),

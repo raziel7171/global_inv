@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:global_inv/src/objects/productModel.dart';
+import 'package:global_inv/src/providers/products_provider.dart';
 
 // Define a custom Form widget.
 class AddProductForm extends StatefulWidget {
@@ -11,6 +13,9 @@ class AddProductForm extends StatefulWidget {
 }
 
 class _AddProductFormState extends State<AddProductForm> {
+  ProductModel product = new ProductModel();
+  ProductsProvider productsProvider = new ProductsProvider();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Map data;
   bool _autoValidate = false;
@@ -53,6 +58,7 @@ class _AddProductFormState extends State<AddProductForm> {
           validator: validateName,
           onSaved: (String val) {
             _name = val;
+            product.name = val;
           },
         ),
         TextFormField(
@@ -61,14 +67,17 @@ class _AddProductFormState extends State<AddProductForm> {
           validator: validatePrice,
           onSaved: (String val) {
             _price = double.parse(val);
+            product.price = double.parse(val);
           },
         ),
         TextFormField(
+          initialValue: product.quantity.toString(),
           decoration: const InputDecoration(labelText: 'Quantity'),
           keyboardType: TextInputType.number,
           validator: validateQuantity,
           onSaved: (String val) {
             _quantity = int.parse(val);
+            product.quantity = int.parse(val);
           },
         ),
         SizedBox(
@@ -118,26 +127,24 @@ class _AddProductFormState extends State<AddProductForm> {
   }
 
   addData() {
+    _validateInputs();
     String _productCode = getRandomString(5);
-    Map<String, dynamic> productData = {
-      "code": _productCode,
-      "name": _name,
-      "price": _price,
-      "quantity": _quantity,
-      "icon": "add_shopping_cart",
-      "route": "product",
-      "description":
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    };
+    product.code = _productCode;
+    product.icon = "add_shopping_cart";
+    product.route = "product";
+    product.description =
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
     Map<String, dynamic> inventoryData = {
       "code": _productCode,
       "quantity": _quantity,
     };
 
+    productsProvider.createProduct(product);
+
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection('products');
-    collectionReference.add(productData);
+    collectionReference.add(product.toJson());
 
     collectionReference = FirebaseFirestore.instance.collection('inventory');
     collectionReference.add(inventoryData);
