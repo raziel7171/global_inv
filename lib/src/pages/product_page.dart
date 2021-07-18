@@ -51,6 +51,7 @@ class _ProductPageState extends State<ProductPage> {
             ),
             Divider(),
             Container(
+              alignment: Alignment.topLeft,
               child: Text.rich(TextSpan(
                   text: 'Descripción: ',
                   style: TextStyle(fontWeight: FontWeight.bold),

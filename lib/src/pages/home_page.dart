@@ -31,7 +31,65 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      body: _lista(),
+      bottomNavigationBar: Container(
+          color: Colors.lightGreen.shade100,
+          child: ListTile(
+            title: Text(
+              "Total: 10000 ＄",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            trailing: IconButton(
+                icon: Icon(Icons.shopping_cart), onPressed: () => null),
+          )),
+      body: Stack(
+        children: [
+          Positioned(child: _lista()),
+          Positioned.fill(
+              child: DraggableScrollableSheet(
+                  maxChildSize: 0.7,
+                  minChildSize: 0.12,
+                  builder: (_, controller) {
+                    return Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                      color: Colors.lightGreen.shade100,
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Expanded(
+                              child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  controller: controller,
+                                  itemCount: 10,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: Text('10x'),
+                                      title: Text('index: $index'),
+                                      subtitle: Text('summatoria 1500＄'),
+                                      trailing: Container(
+                                          // color: Colors.lightBlueAccent,
+                                          child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: const Icon(Icons.add),
+                                            onPressed: () => null,
+                                          ),
+                                          VerticalDivider(),
+                                          IconButton(
+                                            icon: const Icon(Icons.remove),
+                                            onPressed: () => null,
+                                          )
+                                        ],
+                                      )),
+                                    );
+                                  }))),
+                    );
+                  }))
+        ],
+      ),
     );
   }
 
@@ -64,43 +122,6 @@ class _HomePageState extends State<HomePage> {
             arguments: ProductArguments(product.name, product));
       },
     );
-  }
-
-  List<Widget> _listaItems(List<dynamic> data, BuildContext context) {
-    final List<Widget> opciones = [];
-
-    // for (Product product in data) {
-    //   final int quantity = product.quantity;
-    //   final widgetTemp = ListTile(
-    //     title: Text(product.name),
-    //     subtitle: Text(product.price.toString() + "＄"),
-    //     leading: Text(quantity.toString() + 'x'),
-    //     trailing: IconButton(
-    //         icon: getIcon(product.icon), onPressed: () => quantity - 1),
-    //     onTap: () {
-    //       Navigator.pushNamed(context, ProductPage.routeName,
-    //           arguments: ProductArguments(product.name, product));
-    //     },
-    //   );
-    //   opciones..add(widgetTemp)..add(Divider());
-    // }
-
-    data.forEach((opt) {
-      final int quantity = opt['quantity'];
-      final widgetTemp = ListTile(
-        title: Text(opt['name']),
-        subtitle: Text(opt['price'].toString() + "＄"),
-        leading: Text(quantity.toString() + 'x'),
-        trailing: IconButton(
-            icon: getIcon(opt['icon']), onPressed: () => quantity - 1),
-        onTap: () {
-          Navigator.pushNamed(context, ProductPage.routeName,
-              arguments: ProductArguments(opt['name'], opt));
-        },
-      );
-      opciones..add(widgetTemp)..add(Divider());
-    });
-    return opciones;
   }
 
   void subtract(dynamic product) => product['quantity'] - 1;
