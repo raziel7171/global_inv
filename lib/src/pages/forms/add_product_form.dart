@@ -40,12 +40,6 @@ class _AddProductFormState extends State<AddProductForm> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          addData();
-        },
-      ),
     );
   }
 
@@ -62,6 +56,7 @@ class _AddProductFormState extends State<AddProductForm> {
           },
         ),
         TextFormField(
+          initialValue: product.quantity.toString(),
           decoration: const InputDecoration(labelText: 'Price'),
           keyboardType: TextInputType.number,
           validator: validatePrice,
@@ -83,9 +78,11 @@ class _AddProductFormState extends State<AddProductForm> {
         SizedBox(
           height: 10.0,
         ),
-        RaisedButton(
-          onPressed: _validateInputs,
-          child: new Text('Validate'),
+        ElevatedButton(
+          onPressed: () {
+            addData();
+          },
+          child: Text('Add product'),
         ),
       ],
     );
@@ -99,10 +96,15 @@ class _AddProductFormState extends State<AddProductForm> {
   }
 
   String validatePrice(String value) {
-    if (double.parse(value) < 50.0)
+    double _numValue = 0;
+    if (value != "") {
+      _numValue = double.parse(value);
+    }
+    if (_numValue < 50.0) {
       return 'The minimum price must be over 50 (COP)';
-    else
+    } else {
       return null;
+    }
   }
 
   String validateQuantity(String value) {
@@ -114,40 +116,53 @@ class _AddProductFormState extends State<AddProductForm> {
       return null;
   }
 
-  void _validateInputs() {
+  bool _validateInputs() {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
+      return true;
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
         _autoValidate = true;
       });
+      return false;
     }
   }
 
-  addData() {
-    _validateInputs();
+  addData() async {
+    bool formIsValid = _validateInputs();
+    bool connectionResult = false;
     String _productCode = getRandomString(5);
-    product.code = _productCode;
+    // product.id = _productCode;
     product.icon = "add_shopping_cart";
     product.route = "product";
     product.description =
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
-    Map<String, dynamic> inventoryData = {
-      "code": _productCode,
-      "quantity": _quantity,
-    };
-
-    productsProvider.createProduct(product);
-
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection('products');
-    collectionReference.add(product.toJson());
-
-    collectionReference = FirebaseFirestore.instance.collection('inventory');
-    collectionReference.add(inventoryData);
+    if (formIsValid) {
+      connectionResult = await productsProvider.createProduct(product);
+      if (connectionResult) {
+        final snackBar = SnackBar(
+          content: Text('Product added!'),
+          action: SnackBarAction(
+            label: 'close',
+            onPressed: () {},
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else {
+        final snackBar = SnackBar(
+          content: Text(
+              'The product could not be added check your internet connection'),
+          action: SnackBarAction(
+            label: 'close',
+            onPressed: () {},
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    }
   }
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(

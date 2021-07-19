@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:global_inv/src/objects/productArgumentsModel.dart';
 import 'package:global_inv/src/objects/productModel.dart';
-import 'package:global_inv/src/pages/add_product_form.dart';
+import 'package:global_inv/src/pages/forms/add_product_form.dart';
+import 'package:global_inv/src/pages/drawer_lateral_menu.dart';
 import 'package:global_inv/src/pages/product_page.dart';
 import 'package:global_inv/src/providers/products_provider.dart';
 import 'package:global_inv/src/utils/icon_string_util.dart';
 
-import 'add_product_form.dart';
+import 'forms/add_product_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -24,13 +26,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Global - Inv'),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.menu),
-        onPressed: () {
-          Navigator.pushNamed(context, AddProductForm.routeName);
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+      drawer: drawerLateralMenu(),
       bottomNavigationBar: Container(
           color: Colors.lightGreen.shade100,
           child: ListTile(
@@ -125,10 +121,4 @@ class _HomePageState extends State<HomePage> {
   }
 
   void subtract(dynamic product) => product['quantity'] - 1;
-}
-
-class ProductArguments {
-  final String name;
-  final dynamic specificProduct;
-  ProductArguments(this.name, this.specificProduct);
 }
