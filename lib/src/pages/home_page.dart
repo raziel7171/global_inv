@@ -6,7 +6,7 @@ import 'package:global_inv/src/pages/drawer_lateral_menu.dart';
 import 'package:global_inv/src/pages/product_page.dart';
 import 'package:global_inv/src/providers/products_provider.dart';
 import 'package:global_inv/src/utils/icon_string_util.dart';
-
+import 'package:global_inv/src/utils/search_delegate.dart';
 import 'forms/add_product_form.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,12 +19,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ProductsProvider productsProvider = new ProductsProvider();
   List<ProductModel> productList = [];
+  var searchResult = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Global - Inv'),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () async {
+                final finalResult =
+                    await showSearch(context: context, delegate: DataSearch());
+                setState(() {
+                  searchResult = finalResult;
+                });
+              },
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ))
+        ],
       ),
       drawer: drawerLateralMenu(),
       bottomNavigationBar: Container(
