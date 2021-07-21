@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:global_inv/src/objects/productArgumentsModel.dart';
 import 'package:global_inv/src/objects/productModel.dart';
-import 'package:global_inv/src/pages/forms/add_product_form.dart';
 import 'package:global_inv/src/pages/drawer_lateral_menu.dart';
 import 'package:global_inv/src/pages/product_page.dart';
 import 'package:global_inv/src/providers/products_provider.dart';
 import 'package:global_inv/src/utils/icon_string_util.dart';
 import 'package:global_inv/src/utils/search_delegate.dart';
-import 'forms/add_product_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -19,43 +17,65 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ProductsProvider productsProvider = new ProductsProvider();
   List<ProductModel> productList = [];
-  var searchResult = '';
+  ProductModel searchResult;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Global - Inv'),
-        actions: <Widget>[
-          IconButton(
-              onPressed: () async {
-                final finalResult =
-                    await showSearch(context: context, delegate: DataSearch());
-                setState(() {
-                  searchResult = finalResult;
-                });
-              },
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ))
-        ],
-      ),
-      drawer: drawerLateralMenu(),
-      bottomNavigationBar: Container(
-          color: Colors.lightGreen.shade100,
-          child: ListTile(
-            title: Text(
-              "Total: 10000 ＄",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            trailing: IconButton(
-                icon: Icon(Icons.shopping_cart), onPressed: () => null),
-          )),
-      body: Stack(
-        children: [
-          Positioned(child: _lista()),
-          Positioned.fill(
+        appBar: AppBar(
+          title: Text('Global - Inv'),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () async {
+                  final finalResult = await showSearch(
+                      context: context, delegate: DataSearch());
+                  setState(() {
+                    searchResult = finalResult;
+                  });
+                },
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                )),
+          ],
+        ),
+        drawer: DrawerLateralMenu(),
+        bottomNavigationBar: Container(
+            color: Colors.lightGreen.shade100,
+            child: ListTile(
+              title: Text(
+                "Total: 10000 ＄",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              trailing: IconButton(
+                  icon: Icon(Icons.shopping_cart), onPressed: () => null),
+            )),
+        body: Column(children: [
+          searchResult == null
+              ? Container()
+              : Container(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  color: Colors.blueAccent.shade100,
+                  child: ListTile(
+                    title: Text(searchResult.name,
+                        style: TextStyle(color: Colors.white)),
+                    subtitle: Text(searchResult.price.toString() + "＄",
+                        style: TextStyle(color: Colors.white)),
+                    leading: Text(searchResult.quantity.toString() + 'x',
+                        style: TextStyle(color: Colors.white)),
+                    trailing: IconButton(
+                        icon: Icon(Icons.add_shopping_cart),
+                        color: Colors.white,
+                        onPressed: () => searchResult.quantity - 1),
+                    onTap: () {
+                      Navigator.pushNamed(context, ProductPage.routeName,
+                          arguments: ProductArguments(
+                              searchResult.name, searchResult));
+                    },
+                  ),
+                ),
+          Expanded(child: _lista()),
+          Expanded(
               child: DraggableScrollableSheet(
                   maxChildSize: 0.7,
                   minChildSize: 0.12,
@@ -99,9 +119,7 @@ class _HomePageState extends State<HomePage> {
                                   }))),
                     );
                   }))
-        ],
-      ),
-    );
+        ]));
   }
 
   Widget _lista() {
@@ -127,7 +145,8 @@ class _HomePageState extends State<HomePage> {
       subtitle: Text(product.price.toString() + "＄"),
       leading: Text(product.quantity.toString() + 'x'),
       trailing: IconButton(
-          icon: getIcon(product.icon), onPressed: () => product.quantity - 1),
+          icon: Icon(Icons.add_shopping_cart),
+          onPressed: () => product.quantity - 1),
       onTap: () {
         Navigator.pushNamed(context, ProductPage.routeName,
             arguments: ProductArguments(product.name, product));

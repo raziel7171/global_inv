@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:global_inv/src/objects/productModel.dart';
+import 'package:global_inv/src/providers/products_provider.dart';
 
-class DataSearch extends SearchDelegate<String> {
+class DataSearch extends SearchDelegate<ProductModel> {
+  ProductsProvider productsProvider = new ProductsProvider();
+
   final data = ["manzana", "piña", "durazno", "piña", "calabaza", "tomate"];
   final recentData = ["durazno"];
 
@@ -19,7 +23,7 @@ class DataSearch extends SearchDelegate<String> {
   Widget buildLeading(BuildContext context) {
     return IconButton(
         onPressed: () {
-          close(context, query);
+          close(context, null);
         },
         icon: AnimatedIcon(
             icon: AnimatedIcons.menu_arrow, progress: transitionAnimation));
@@ -27,88 +31,146 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final List<String> allData = data
-        .where((specificElement) =>
-            specificElement.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-    return ListView.builder(
-        itemBuilder: (context, index) => ListTile(
-              title: RichText(
-                text: TextSpan(
-                    text: allData[index]
-                        .substring(0, allData[index].indexOf(query)),
-                    style: TextStyle(color: Colors.grey),
-                    children: [
-                      TextSpan(
-                          text: allData[index].substring(
-                              allData[index].indexOf(query),
-                              allData[index].indexOf(query) + query.length),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                      TextSpan(
-                          text: allData[index].substring(
-                              allData[index].indexOf(query) + query.length),
-                          style: TextStyle(color: Colors.grey))
-                    ]),
-              ),
-              onTap: () {
-                query = allData[index];
-                print(query);
-                close(context, query);
-              },
-            ),
-        itemCount: allData.length);
+    List<ProductModel> productsList;
+    return FutureBuilder(
+        future: productsProvider.readProducts(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+          if (snapshot.hasData) {
+            final lowerCaseQuery = query.toLowerCase();
+            List<ProductModel> productsList = snapshot.data;
+            final finalProductsList = productsList
+                .where((specificElement) =>
+                    specificElement.name.toLowerCase().contains(lowerCaseQuery))
+                .toList();
+            return ListView.builder(
+                itemBuilder: (context, index) => ListTile(
+                      title: RichText(
+                        text: TextSpan(
+                            text: finalProductsList[index]
+                                .name
+                                .toLowerCase()
+                                .substring(
+                                    0,
+                                    finalProductsList[index]
+                                        .name
+                                        .toLowerCase()
+                                        .indexOf(lowerCaseQuery)),
+                            style: TextStyle(color: Colors.grey),
+                            children: [
+                              TextSpan(
+                                  text: finalProductsList[index].name.substring(
+                                      finalProductsList[index]
+                                          .name
+                                          .toLowerCase()
+                                          .indexOf(lowerCaseQuery),
+                                      finalProductsList[index]
+                                              .name
+                                              .toLowerCase()
+                                              .indexOf(lowerCaseQuery) +
+                                          query.length),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
+                              TextSpan(
+                                  text: finalProductsList[index]
+                                      .name
+                                      .toLowerCase()
+                                      .substring(finalProductsList[index]
+                                              .name
+                                              .toLowerCase()
+                                              .indexOf(lowerCaseQuery) +
+                                          query.length),
+                                  style: TextStyle(color: Colors.grey))
+                            ]),
+                      ),
+                      onTap: () {
+                        query = finalProductsList[index].name.toLowerCase();
+                        close(context, finalProductsList[index]);
+                      },
+                    ),
+                itemCount: finalProductsList.length);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final lowerCaseQuery = query.toLowerCase();
-    final suggestionList = query.isEmpty
-        ? recentData
-        : data
-            .where((specificElement) =>
-                specificElement.toLowerCase().contains(lowerCaseQuery))
-            .toList();
+    List<ProductModel> productsList;
+    return FutureBuilder(
+        future: productsProvider.readProducts(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+          if (snapshot.hasData) {
+            final lowerCaseQuery = query.toLowerCase();
+            List<ProductModel> productsList = snapshot.data;
+            final finalProductsList = productsList
+                .where((specificElement) =>
+                    specificElement.name.toLowerCase().contains(lowerCaseQuery))
+                .toList();
+            return ListView.builder(
+                itemBuilder: (context, index) => ListTile(
+                      title: RichText(
+                        text: TextSpan(
+                            text: finalProductsList[index]
+                                .name
+                                .toLowerCase()
+                                .substring(
+                                    0,
+                                    finalProductsList[index]
+                                        .name
+                                        .toLowerCase()
+                                        .indexOf(lowerCaseQuery)),
+                            style: TextStyle(color: Colors.grey),
+                            children: [
+                              TextSpan(
+                                  text: finalProductsList[index]
+                                      .name
+                                      .toLowerCase()
+                                      .substring(
+                                          finalProductsList[index]
+                                              .name
+                                              .toLowerCase()
+                                              .indexOf(lowerCaseQuery),
+                                          finalProductsList[index]
+                                                  .name
+                                                  .toLowerCase()
+                                                  .indexOf(lowerCaseQuery) +
+                                              query.length),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
+                              TextSpan(
+                                  text: finalProductsList[index]
+                                      .name
+                                      .toLowerCase()
+                                      .substring(finalProductsList[index]
+                                              .name
+                                              .toLowerCase()
+                                              .indexOf(lowerCaseQuery) +
+                                          query.length),
+                                  style: TextStyle(color: Colors.grey))
+                            ]),
+                      ),
+                      onTap: () {
+                        query = finalProductsList[index].name.toLowerCase();
+                        close(context, finalProductsList[index]);
+                      },
+                    ),
+                itemCount: finalProductsList.length);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
+  }
 
-    return ListView.builder(
-        itemBuilder: (context, index) => ListTile(
-              title: RichText(
-                text: TextSpan(
-                    text: suggestionList[index].toLowerCase().substring(
-                        0,
-                        suggestionList[index]
-                            .toLowerCase()
-                            .indexOf(lowerCaseQuery)),
-                    style: TextStyle(color: Colors.grey),
-                    children: [
-                      TextSpan(
-                          text: suggestionList[index].toLowerCase().substring(
-                              suggestionList[index]
-                                  .toLowerCase()
-                                  .indexOf(lowerCaseQuery),
-                              suggestionList[index]
-                                      .toLowerCase()
-                                      .indexOf(lowerCaseQuery) +
-                                  query.length),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                      TextSpan(
-                          text: suggestionList[index].toLowerCase().substring(
-                              suggestionList[index]
-                                      .toLowerCase()
-                                      .indexOf(lowerCaseQuery) +
-                                  query.length),
-                          style: TextStyle(color: Colors.grey))
-                    ]),
-              ),
-              onTap: () {
-                query = suggestionList[index];
-                print(query);
-                close(context, query);
-              },
-            ),
-        itemCount: suggestionList.length);
+  _lista(BuildContext context) {
+    return Future.value(_productList(context));
+  }
+
+  Future<List<ProductModel>> _productList(BuildContext context) async {
+    return productsProvider.readProducts();
   }
 }

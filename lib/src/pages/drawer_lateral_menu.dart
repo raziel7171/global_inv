@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:global_inv/src/pages/forms/add_product_form.dart';
 import 'package:global_inv/src/pages/forms/delete_product_form.dart';
 
-class drawerLateralMenu extends StatelessWidget {
+class DrawerLateralMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(

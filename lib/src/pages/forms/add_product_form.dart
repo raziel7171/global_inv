@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:global_inv/src/objects/productModel.dart';
@@ -18,10 +17,6 @@ class _AddProductFormState extends State<AddProductForm> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Map data;
-  bool _autoValidate = false;
-  String _name;
-  double _price;
-  int _quantity = 0;
   static const _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
   Random _rnd = Random();
   @override
@@ -36,14 +31,14 @@ class _AddProductFormState extends State<AddProductForm> {
           child: Form(
             key: _formKey,
             // autovalidate: _autoValidate,
-            child: FormUI(),
+            child: formUI(),
           ),
         ),
       ),
     );
   }
 
-  Widget FormUI() {
+  Widget formUI() {
     return Column(
       children: <Widget>[
         TextFormField(
@@ -51,7 +46,6 @@ class _AddProductFormState extends State<AddProductForm> {
           keyboardType: TextInputType.text,
           validator: validateName,
           onSaved: (String val) {
-            _name = val;
             product.name = val;
           },
         ),
@@ -61,7 +55,6 @@ class _AddProductFormState extends State<AddProductForm> {
           keyboardType: TextInputType.number,
           validator: validatePrice,
           onSaved: (String val) {
-            _price = double.parse(val);
             product.price = double.parse(val);
           },
         ),
@@ -71,7 +64,6 @@ class _AddProductFormState extends State<AddProductForm> {
           keyboardType: TextInputType.number,
           validator: validateQuantity,
           onSaved: (String val) {
-            _quantity = int.parse(val);
             product.quantity = int.parse(val);
           },
         ),
@@ -123,9 +115,7 @@ class _AddProductFormState extends State<AddProductForm> {
       return true;
     } else {
 //    If all data are not valid then start auto validation.
-      setState(() {
-        _autoValidate = true;
-      });
+      setState(() {});
       return false;
     }
   }
@@ -133,8 +123,6 @@ class _AddProductFormState extends State<AddProductForm> {
   addData() async {
     bool formIsValid = _validateInputs();
     bool connectionResult = false;
-    String _productCode = getRandomString(5);
-    // product.id = _productCode;
     product.icon = "add_shopping_cart";
     product.route = "product";
     product.description =

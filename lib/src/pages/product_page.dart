@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:global_inv/src/objects/productArgumentsModel.dart';
-import 'package:global_inv/src/pages/home_page.dart';
 import 'package:global_inv/src/providers/menu_provider.dart';
 
 class ProductPage extends StatefulWidget {

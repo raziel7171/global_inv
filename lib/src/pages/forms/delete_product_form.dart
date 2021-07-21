@@ -12,11 +12,13 @@ class DeleteProductform extends StatefulWidget {
 
 class _DeleteProductformState extends State<DeleteProductform> {
   TextEditingController _searchController = TextEditingController();
+  ProductsProvider productsProvider = new ProductsProvider();
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(() {
+      // ignore: unnecessary_statements
       _onSearchChanged;
     });
   }
@@ -32,7 +34,6 @@ class _DeleteProductformState extends State<DeleteProductform> {
     return productsProvider.readProducts();
   }
 
-  ProductsProvider productsProvider = new ProductsProvider();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +64,10 @@ class _DeleteProductformState extends State<DeleteProductform> {
               "Slide the products you want to delete or tap on them to get more info",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            trailing: IconButton(icon: Icon(Icons.warning)),
+            trailing: IconButton(
+              icon: Icon(Icons.warning),
+              onPressed: () {},
+            ),
           )),
     );
   }
@@ -94,7 +98,10 @@ class _DeleteProductformState extends State<DeleteProductform> {
           title: Text(product.name),
           subtitle: Text(product.price.toString() + "＄"),
           leading: Text(product.quantity.toString() + 'x'),
-          trailing: IconButton(icon: Icon(Icons.info)),
+          trailing: IconButton(
+            icon: Icon(Icons.info),
+            onPressed: () {},
+          ),
           onTap: () {
             Navigator.pushNamed(context, ProductPage.routeName,
                 arguments: ProductArguments(product.name, product));
