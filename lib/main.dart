@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:global_inv/src/pages/forms/add_product_form.dart';
 import 'package:global_inv/src/pages/forms/delete_product_form.dart';
+import 'package:global_inv/src/pages/forms/edit_product_form.dart';
+import 'package:global_inv/src/pages/forms/edit_specific_product_form.dart';
 import 'package:global_inv/src/pages/home_page.dart';
 import 'package:global_inv/src/pages/product_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +25,10 @@ class MyApp extends StatelessWidget {
           // 'product': (BuildContext context) => ProductPage(),
           ProductPage.routeName: (context) => ProductPage(),
           AddProductForm.routeName: (context) => AddProductForm(),
-          DeleteProductform.routeName: (context) => DeleteProductform(),
+          DeleteProductForm.routeName: (context) => DeleteProductForm(),
+          EditProductForm.routeName: (context) => EditProductForm(),
+          editSpecificProductForm.routeName: (context) =>
+              editSpecificProductForm(),
         });
   }
 }

@@ -5,31 +5,16 @@ import 'package:global_inv/src/providers/products_provider.dart';
 import 'package:global_inv/src/utils/search_delegate.dart';
 import '../product_page.dart';
 
-class DeleteProductform extends StatefulWidget {
+class DeleteProductForm extends StatefulWidget {
   static const routeName = '/deleteProduct';
   @override
-  _DeleteProductformState createState() => _DeleteProductformState();
+  _DeleteProductFormState createState() => _DeleteProductFormState();
 }
 
-class _DeleteProductformState extends State<DeleteProductform> {
+class _DeleteProductFormState extends State<DeleteProductForm> {
   TextEditingController _searchController = TextEditingController();
   ProductsProvider productsProvider = new ProductsProvider();
   ProductModel searchResult;
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      // ignore: unnecessary_statements
-      _onSearchChanged;
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchController.removeListener(_onSearchChanged);
-    _searchController.dispose();
-    super.dispose();
-  }
 
   Future<List<ProductModel>> _productList(BuildContext context) async {
     return productsProvider.readProducts();
@@ -101,7 +86,7 @@ class _DeleteProductformState extends State<DeleteProductform> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             trailing: IconButton(
-              icon: Icon(Icons.warning),
+              icon: Icon(Icons.swap_horiz),
               onPressed: () {},
             ),
           )),
@@ -170,9 +155,5 @@ class _DeleteProductformState extends State<DeleteProductform> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     return connectionResult;
-  }
-
-  void _onSearchChanged() {
-    print(_searchController.text);
   }
 }

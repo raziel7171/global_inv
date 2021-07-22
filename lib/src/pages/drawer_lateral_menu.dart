@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:global_inv/src/pages/forms/add_product_form.dart';
 import 'package:global_inv/src/pages/forms/delete_product_form.dart';
+import 'package:global_inv/src/pages/forms/edit_product_form.dart';
 
 class DrawerLateralMenu extends StatelessWidget {
   @override
@@ -85,8 +86,7 @@ class DrawerLateralMenu extends StatelessWidget {
                       title: Text('Edit'),
                       subtitle: Text('Modify an existing product'),
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, DeleteProductform.routeName);
+                        Navigator.pushNamed(context, EditProductForm.routeName);
                       })),
               PopupMenuItem(
                   child: ListTile(
@@ -95,7 +95,7 @@ class DrawerLateralMenu extends StatelessWidget {
                       subtitle: Text('Delete a product from your inventory'),
                       onTap: () {
                         Navigator.pushNamed(
-                            context, DeleteProductform.routeName);
+                            context, DeleteProductForm.routeName);
                       }))
             ]);
   }

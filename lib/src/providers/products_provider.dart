@@ -70,7 +70,6 @@ class ProductsProvider {
       final decodedData = json.decode(response.body);
 
       if (decodedData != null) {
-        print('Modified');
         return true;
       } else {
         return false;

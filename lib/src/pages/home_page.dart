@@ -40,16 +40,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         drawer: DrawerLateralMenu(),
-        bottomNavigationBar: Container(
-            color: Colors.lightGreen.shade100,
-            child: ListTile(
-              title: Text(
-                "Total: 10000 ＄",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              trailing: IconButton(
-                  icon: Icon(Icons.shopping_cart), onPressed: () => null),
-            )),
         body: Column(children: [
           searchResult == null
               ? Container()
@@ -74,11 +64,20 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-          Expanded(child: _lista()),
+          Expanded(flex: 3, child: _lista()),
+          Divider(),
+          ListTile(
+            title: Text(
+              "Total: 10000 ＄",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            trailing: IconButton(
+                icon: Icon(Icons.shopping_cart), onPressed: () => null),
+          ),
           Expanded(
               child: DraggableScrollableSheet(
-                  maxChildSize: 0.7,
-                  minChildSize: 0.12,
+                  maxChildSize: 0.5,
+                  minChildSize: 0.2,
                   builder: (_, controller) {
                     return Material(
                       elevation: 10,
