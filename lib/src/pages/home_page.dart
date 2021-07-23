@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:global_inv/src/objects/productArgumentsModel.dart';
 import 'package:global_inv/src/objects/productModel.dart';
@@ -17,108 +19,121 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ProductsProvider productsProvider = new ProductsProvider();
   List<ProductModel> productList = [];
+  StreamController<ProductModel> streamController;
   ProductModel searchResult;
+
+  @override
+  void initState() {
+    super.initState();
+    streamController = StreamController.broadcast();
+    streamController.stream.listen((product) {
+      setState(() {
+        productList.add(product);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Global - Inv'),
-          actions: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  final finalResult = await showSearch(
-                      context: context, delegate: DataSearch());
-                  setState(() {
-                    searchResult = finalResult;
-                  });
-                },
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                )),
-          ],
-        ),
-        drawer: DrawerLateralMenu(),
-        body: Column(children: [
-          searchResult == null
-              ? Container()
-              : Container(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  color: Colors.blueAccent.shade100,
-                  child: ListTile(
-                    title: Text(searchResult.name,
-                        style: TextStyle(color: Colors.white)),
-                    subtitle: Text(searchResult.price.toString() + "＄",
-                        style: TextStyle(color: Colors.white)),
-                    leading: Text(searchResult.quantity.toString() + 'x',
-                        style: TextStyle(color: Colors.white)),
-                    trailing: IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
-                        color: Colors.white,
-                        onPressed: () => searchResult.quantity - 1),
-                    onTap: () {
-                      Navigator.pushNamed(context, ProductPage.routeName,
-                          arguments: ProductArguments(
-                              searchResult.name, searchResult));
-                    },
-                  ),
-                ),
-          Expanded(flex: 3, child: _lista()),
-          Divider(),
-          ListTile(
-            title: Text(
-              "Total: 10000 ＄",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            trailing: IconButton(
-                icon: Icon(Icons.shopping_cart), onPressed: () => null),
+      extendBodyBehindAppBar: false,
+      appBar: AppBar(
+        title: Text('Global - Inv'),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () async {
+                final finalResult =
+                    await showSearch(context: context, delegate: DataSearch());
+                setState(() {
+                  searchResult = finalResult;
+                  _showSnack("Slide the search result to dismiss");
+                });
+              },
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              )),
+        ],
+      ),
+      drawer: DrawerLateralMenu(),
+      body: Stack(
+        children: [
+          Container(
+            alignment: Alignment.centerRight,
+            width: 300,
+            height: 300,
           ),
-          Expanded(
-              child: DraggableScrollableSheet(
-                  maxChildSize: 0.5,
-                  minChildSize: 0.2,
-                  builder: (_, controller) {
-                    return Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                      color: Colors.lightGreen.shade100,
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: Expanded(
-                              child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  controller: controller,
-                                  itemCount: 10,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: Text('10x'),
-                                      title: Text('index: $index'),
-                                      subtitle: Text('summatoria 1500＄'),
-                                      trailing: Container(
-                                          // color: Colors.lightBlueAccent,
-                                          child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          IconButton(
-                                            icon: const Icon(Icons.add),
-                                            onPressed: () => null,
-                                          ),
-                                          VerticalDivider(),
-                                          IconButton(
-                                            icon: const Icon(Icons.remove),
-                                            onPressed: () => null,
-                                          )
-                                        ],
-                                      )),
-                                    );
-                                  }))),
-                    );
-                  }))
-        ]));
+          Container(
+            alignment: Alignment.centerRight,
+            width: MediaQuery.of(context).size.width * 1,
+            height: MediaQuery.of(context).size.height * 1,
+          ),
+          Positioned(
+            top: 0,
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              width: MediaQuery.of(context).size.width * 1,
+              height: MediaQuery.of(context).size.height * 0.725,
+              child: _lista(),
+            ),
+          ),
+          _salesDraggableWidget(),
+          Positioned(
+            child: Container(
+                child: searchResult == null
+                    ? Container()
+                    : Dismissible(
+                        key: UniqueKey(),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.shade100,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black54,
+                                blurRadius: 15.0,
+                                spreadRadius: 1.0,
+                                offset: Offset(0.5, 0.5),
+                              ),
+                            ],
+                          ),
+                          alignment: Alignment.centerRight,
+                          width: MediaQuery.of(context).size.width * 1,
+                          height: 80,
+                          child: ListTile(
+                            title: Text(searchResult.name,
+                                style: TextStyle(color: Colors.white)),
+                            subtitle: Text(searchResult.price.toString() + "＄",
+                                style: TextStyle(color: Colors.white)),
+                            leading: Text(
+                                searchResult.quantity.toString() + 'x',
+                                style: TextStyle(color: Colors.white)),
+                            trailing: IconButton(
+                                icon: Icon(Icons.add_shopping_cart),
+                                color: Colors.white,
+                                onPressed: () {
+                                  setState(() {
+                                    productList.add(searchResult);
+                                    _showSnack(searchResult.name +
+                                        " added to the cart");
+                                  });
+                                }),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, ProductPage.routeName,
+                                  arguments: ProductArguments(
+                                      searchResult.name, searchResult));
+                            },
+                          ),
+                        ),
+                        onDismissed: (direction) {
+                          setState(() {
+                            searchResult = null;
+                          });
+                        })),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _lista() {
@@ -145,7 +160,12 @@ class _HomePageState extends State<HomePage> {
       leading: Text(product.quantity.toString() + 'x'),
       trailing: IconButton(
           icon: Icon(Icons.add_shopping_cart),
-          onPressed: () => product.quantity - 1),
+          onPressed: () {
+            setState(() {
+              productList.add(product);
+              _showSnack(product.name + " added to the cart");
+            });
+          }),
       onTap: () {
         Navigator.pushNamed(context, ProductPage.routeName,
             arguments: ProductArguments(product.name, product));
@@ -153,5 +173,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void subtract(dynamic product) => product['quantity'] - 1;
+  Widget _salesDraggableWidget() {
+    return DraggableScrollableSheet(
+        initialChildSize: 0.2,
+        minChildSize: 0.2,
+        maxChildSize: 0.7,
+        builder: (context, scrollController) {
+          return Container(
+              child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: productList.length,
+                  itemBuilder: (context, i) {
+                    return ListTile(
+                      title: Text(productList[i].name),
+                    );
+                  }),
+              decoration: BoxDecoration(
+                color: Colors.greenAccent.shade200,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)),
+              ));
+        });
+  }
+
+  _showSnack(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      action: SnackBarAction(
+        label: 'close',
+        onPressed: () {},
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 }
