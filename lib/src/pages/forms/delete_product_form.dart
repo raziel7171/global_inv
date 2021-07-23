@@ -12,7 +12,6 @@ class DeleteProductForm extends StatefulWidget {
 }
 
 class _DeleteProductFormState extends State<DeleteProductForm> {
-  TextEditingController _searchController = TextEditingController();
   ProductsProvider productsProvider = new ProductsProvider();
   ProductModel searchResult;
 
@@ -74,6 +73,7 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
                           _deleteInteraction(searchResult);
                           searchResult = null;
                         });
+                        return null;
                       })),
           Expanded(child: _lista())
         ],

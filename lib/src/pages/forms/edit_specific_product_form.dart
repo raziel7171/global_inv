@@ -3,22 +3,21 @@ import 'package:global_inv/src/objects/productArgumentsModel.dart';
 import 'package:global_inv/src/objects/productModel.dart';
 import 'package:global_inv/src/providers/products_provider.dart';
 
-class editSpecificProductForm extends StatefulWidget {
+class EditSpecificProductForm extends StatefulWidget {
   static const routeName = '/editSpecificProduct';
-  editSpecificProductForm({Key key}) : super(key: key);
+  EditSpecificProductForm({Key key}) : super(key: key);
 
   @override
-  _editSpecificProductFormState createState() =>
-      _editSpecificProductFormState();
+  _EditSpecificProductFormState createState() =>
+      _EditSpecificProductFormState();
 }
 
-class _editSpecificProductFormState extends State<editSpecificProductForm> {
+class _EditSpecificProductFormState extends State<EditSpecificProductForm> {
   ProductModel product = new ProductModel();
   ProductsProvider productsProvider = new ProductsProvider();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Map data;
-  static const _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
   @override
   Widget build(BuildContext context) {

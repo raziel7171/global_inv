@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
           AddProductForm.routeName: (context) => AddProductForm(),
           DeleteProductForm.routeName: (context) => DeleteProductForm(),
           EditProductForm.routeName: (context) => EditProductForm(),
-          editSpecificProductForm.routeName: (context) =>
-              editSpecificProductForm(),
+          EditSpecificProductForm.routeName: (context) =>
+              EditSpecificProductForm(),
         });
   }
 }

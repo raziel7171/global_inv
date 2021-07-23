@@ -31,7 +31,6 @@ class DataSearch extends SearchDelegate<ProductModel> {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<ProductModel> productsList;
     return FutureBuilder(
         future: productsProvider.readProducts(),
         builder:
@@ -98,7 +97,6 @@ class DataSearch extends SearchDelegate<ProductModel> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<ProductModel> productsList;
     return FutureBuilder(
         future: productsProvider.readProducts(),
         builder:
@@ -164,13 +162,5 @@ class DataSearch extends SearchDelegate<ProductModel> {
             return Center(child: CircularProgressIndicator());
           }
         });
-  }
-
-  _lista(BuildContext context) {
-    return Future.value(_productList(context));
-  }
-
-  Future<List<ProductModel>> _productList(BuildContext context) async {
-    return productsProvider.readProducts();
   }
 }

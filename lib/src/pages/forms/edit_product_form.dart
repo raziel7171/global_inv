@@ -13,7 +13,6 @@ class EditProductForm extends StatefulWidget {
 }
 
 class _EditProductFormState extends State<EditProductForm> {
-  TextEditingController _searchController = TextEditingController();
   ProductsProvider productsProvider = new ProductsProvider();
   ProductModel searchResult;
   @override
@@ -130,7 +129,7 @@ class _EditProductFormState extends State<EditProductForm> {
   }
 
   _editInteraction(ProductModel product) {
-    Navigator.pushNamed(context, editSpecificProductForm.routeName,
+    Navigator.pushNamed(context, EditSpecificProductForm.routeName,
         arguments: ProductArguments(product.name, product));
     setState(() {});
     (context as Element).reassemble();

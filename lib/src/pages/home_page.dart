@@ -1,12 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:global_inv/src/objects/productArgumentsModel.dart';
 import 'package:global_inv/src/objects/productModel.dart';
+import 'package:global_inv/src/objects/productSaleModel.dart';
+import 'package:global_inv/src/objects/saleModel.dart';
 import 'package:global_inv/src/pages/drawer_lateral_menu.dart';
 import 'package:global_inv/src/pages/product_page.dart';
 import 'package:global_inv/src/providers/products_provider.dart';
-import 'package:global_inv/src/utils/icon_string_util.dart';
+import 'package:global_inv/src/providers/sales_provider.dart';
 import 'package:global_inv/src/utils/search_delegate.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,26 +18,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ProductsProvider productsProvider = new ProductsProvider();
-  List<ProductModel> productList = [];
-  StreamController<ProductModel> streamController;
+  SalesProvider salesProvider = new SalesProvider();
+  List<ProductSaleModel> shopingCartList = [];
   ProductModel searchResult;
-
-  @override
-  void initState() {
-    super.initState();
-    streamController = StreamController.broadcast();
-    streamController.stream.listen((product) {
-      setState(() {
-        productList.add(product);
-      });
-    });
-  }
+  SaleModel currentSale = new SaleModel();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: Text('Global - Inv'),
         actions: <Widget>[
           IconButton(
@@ -55,6 +46,24 @@ class _HomePageState extends State<HomePage> {
               )),
         ],
       ),
+      bottomNavigationBar: Container(
+          color: Colors.blue.shade700,
+          child: ListTile(
+            title: Text(
+              "Total: " + currentSale.total.toString() + " ＄",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white),
+            ),
+            trailing: IconButton(
+                splashColor: Colors.red,
+                icon: Icon(Icons.check, color: Colors.white),
+                onPressed: () {
+                  // currentSale.products = shopingCartList;
+                  // salesProvider.createSale(currentSale);
+                }),
+          )),
       drawer: DrawerLateralMenu(),
       body: Stack(
         children: [
@@ -86,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                         key: UniqueKey(),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.blueAccent.shade100,
+                            color: Colors.blue.shade400,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black54,
@@ -112,9 +121,27 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.white,
                                 onPressed: () {
                                   setState(() {
-                                    productList.add(searchResult);
-                                    _showSnack(searchResult.name +
-                                        " added to the cart");
+                                    ProductSaleModel currentProduct =
+                                        new ProductSaleModel(
+                                            idProduct: searchResult.id,
+                                            name: searchResult.name,
+                                            price: searchResult.price,
+                                            quantity: 1,
+                                            max: searchResult.quantity);
+                                    var contain = shopingCartList.where(
+                                        (element) =>
+                                            element.idProduct ==
+                                            currentProduct.idProduct);
+                                    if (contain.isEmpty) {
+                                      shopingCartList.add(currentProduct);
+                                      currentSale.total = currentSale.total +
+                                          currentProduct.price;
+                                      _showSnack(searchResult.name +
+                                          " added to the cart");
+                                    } else {
+                                      _showSnack(searchResult.name +
+                                          " already in the cart, modify the quantity below");
+                                    }
                                   });
                                 }),
                             onTap: () {
@@ -142,7 +169,9 @@ class _HomePageState extends State<HomePage> {
       builder:
           (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
         if (snapshot.hasData) {
-          final productsList = snapshot.data;
+          var productsList = snapshot.data;
+          productsList =
+              productsList.where((element) => element.quantity > 0).toList();
           return ListView.builder(
               itemCount: productsList.length,
               itemBuilder: (context, i) => _showProductWidget(productsList[i]));
@@ -162,8 +191,22 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(Icons.add_shopping_cart),
           onPressed: () {
             setState(() {
-              productList.add(product);
-              _showSnack(product.name + " added to the cart");
+              ProductSaleModel currentProduct = new ProductSaleModel(
+                  idProduct: product.id,
+                  name: product.name,
+                  price: product.price,
+                  quantity: 1,
+                  max: product.quantity);
+              var contain = shopingCartList.where(
+                  (element) => element.idProduct == currentProduct.idProduct);
+              if (contain.isEmpty) {
+                shopingCartList.add(currentProduct);
+                currentSale.total = currentSale.total + currentProduct.price;
+                _showSnack(product.name + " added to the cart");
+              } else {
+                _showSnack(product.name +
+                    " already in the cart, modify the quantity below");
+              }
             });
           }),
       onTap: () {
@@ -176,20 +219,65 @@ class _HomePageState extends State<HomePage> {
   Widget _salesDraggableWidget() {
     return DraggableScrollableSheet(
         initialChildSize: 0.2,
-        minChildSize: 0.2,
+        minChildSize: 0.1,
         maxChildSize: 0.7,
         builder: (context, scrollController) {
           return Container(
               child: ListView.builder(
                   controller: scrollController,
-                  itemCount: productList.length,
+                  itemCount: shopingCartList.length,
                   itemBuilder: (context, i) {
                     return ListTile(
-                      title: Text(productList[i].name),
+                      selectedTileColor: Color(200),
+                      leading: Text(
+                          shopingCartList[i].quantity.toString() + 'x',
+                          style: TextStyle(color: Colors.white)),
+                      title: Text(shopingCartList[i].name,
+                          style: TextStyle(color: Colors.white)),
+                      subtitle: Text(
+                          (shopingCartList[i].quantity *
+                                  shopingCartList[i].price)
+                              .toString(),
+                          style: TextStyle(color: Colors.white)),
+                      trailing: Container(
+                          // color: Colors.lightBlueAccent,
+                          child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () => {
+                              setState(() {
+                                if (shopingCartList[i].quantity <
+                                    shopingCartList[i].max) {
+                                  shopingCartList[i].quantity =
+                                      shopingCartList[i].quantity + 1;
+                                  currentSale.total = currentSale.total +
+                                      shopingCartList[i].price;
+                                }
+                              })
+                            },
+                          ),
+                          VerticalDivider(),
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: () => {
+                              setState(() {
+                                if (shopingCartList[i].quantity >= 1) {
+                                  shopingCartList[i].quantity =
+                                      shopingCartList[i].quantity - 1;
+                                  currentSale.total = currentSale.total -
+                                      shopingCartList[i].price;
+                                }
+                              })
+                            },
+                          )
+                        ],
+                      )),
                     );
                   }),
               decoration: BoxDecoration(
-                color: Colors.greenAccent.shade200,
+                color: Colors.blue.shade700,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30)),
