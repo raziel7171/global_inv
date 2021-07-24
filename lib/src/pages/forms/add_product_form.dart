@@ -123,8 +123,6 @@ class _AddProductFormState extends State<AddProductForm> {
   addData() async {
     bool formIsValid = _validateInputs();
     bool connectionResult = false;
-    product.icon = "add_shopping_cart";
-    product.route = "product";
     product.description =
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 

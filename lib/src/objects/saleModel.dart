@@ -11,35 +11,31 @@ Map<String, SaleModel> saleModelFromJson(String str) =>
         .map((k, v) => MapEntry<String, SaleModel>(k, SaleModel.fromJson(v)));
 
 String saleModelToJson(SaleModel data) => json.encode(data.toJson());
-DateTime today = new DateTime.now();
 
 class SaleModel {
-  SaleModel({
-    this.date,
-    this.id,
-    this.products,
-    this.total = 0,
-  });
-
   DateTime date;
   String id;
-  Map<String, ProductSaleModel> products;
   double total;
+  List<ProductSaleModel> products;
+
+  SaleModel({this.date, this.id, this.total = 0, products});
 
   factory SaleModel.fromJson(Map<String, dynamic> json) => SaleModel(
-        date: DateTime.parse(json["date"]),
-        id: json["id"],
-        products: Map.from(json["products"]).map((k, v) =>
-            MapEntry<String, ProductSaleModel>(
-                k, ProductSaleModel.fromJson(v))),
-        total: json["total"],
+        date: json["date"] == null ? null : json["date"],
+        id: json["id"] == null ? null : json["id"],
+        total: json["total"] == null ? null : json["total"],
+        products: json["items"] == null
+            ? null
+            : List<ProductSaleModel>.from(
+                json["items"].map((x) => ProductSaleModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "date": date.toIso8601String(),
         "id": id,
-        "products": Map.from(products)
-            .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
         "total": total,
+        "products": products == null
+            ? null
+            : List<dynamic>.from(products.map((x) => x.toJson())),
       };
 }

@@ -15,27 +15,21 @@ class ProductModel {
     this.name,
     this.price = 0.0,
     this.quantity = 0,
-    this.icon,
     this.description,
-    this.route,
   });
 
   String id;
   String name;
   double price;
   int quantity;
-  String icon;
   String description;
-  String route;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
         name: json["name"],
         price: json["price"].toDouble(),
         quantity: json["quantity"].toInt(),
-        icon: json["icon"],
         description: json["description"],
-        route: json["route"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,8 +37,6 @@ class ProductModel {
         "name": name,
         "price": price,
         "quantity": quantity,
-        "icon": icon,
         "description": description,
-        "route": route,
       };
 }

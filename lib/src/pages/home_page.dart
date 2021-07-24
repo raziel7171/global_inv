@@ -56,13 +56,52 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 20,
                   color: Colors.white),
             ),
-            trailing: IconButton(
-                splashColor: Colors.red,
-                icon: Icon(Icons.check, color: Colors.white),
-                onPressed: () {
-                  // currentSale.products = shopingCartList;
-                  // salesProvider.createSale(currentSale);
-                }),
+            trailing: Container(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        shopingCartList.clear();
+                        currentSale.total = 0;
+                        shopingCartList.clear();
+                      });
+                    },
+                  ),
+                  VerticalDivider(
+                    color: Colors.white,
+                  ),
+                  IconButton(
+                      splashColor: Colors.red,
+                      icon: Icon(Icons.check, color: Colors.white),
+                      onPressed: () {
+                        setState(() async {
+                          if (shopingCartList.isNotEmpty) {
+                            // currentSale.products = shopingCartList;
+                            bool connectionResult =
+                                await salesProvider.createSale(currentSale);
+                            if (connectionResult) {
+                              _showSnack("Successful purchase");
+                              setState(() {
+                                shopingCartList.clear();
+                                currentSale.total = 0;
+                                shopingCartList.clear();
+                              });
+                            } else {
+                              _showSnack(
+                                  "Failed purchase, please check your internet connection");
+                            }
+                          } else {
+                            _showSnack(
+                                "Please add at least 1 item to the shopping cart");
+                          }
+                        });
+                      })
+                ],
+              ),
+            ),
           )),
       drawer: DrawerLateralMenu(),
       body: Stack(
@@ -240,7 +279,6 @@ class _HomePageState extends State<HomePage> {
                               .toString(),
                           style: TextStyle(color: Colors.white)),
                       trailing: Container(
-                          // color: Colors.lightBlueAccent,
                           child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[

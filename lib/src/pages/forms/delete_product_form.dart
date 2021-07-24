@@ -136,7 +136,7 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
     connectionResult = await productsProvider.deleteProduct(product.id);
     if (connectionResult) {
       final snackBar = SnackBar(
-        content: Text('Product $product.name succesfully deleted'),
+        content: Text("Product: " + product.name + " succesfully deleted"),
         action: SnackBarAction(
           label: 'close',
           onPressed: () {},
