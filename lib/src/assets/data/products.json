@@ -2,45 +2,54 @@
 
 {
     "products" : [{
-        "productID" : "KL2432",
-		"productName" : "Shampoo",
-		"productPrice" :  10000, 
+        "code" : "KL2432",
+		"name" : "Shampoo",
+		"price" :  10000, 
 		"quantity" : 15,
 		"icon": "add_shopping_cart",
 		"route": "product",
 		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     }, {
-       "productID" : "KL2432",
-		"productName" : "Cigarettes",
-		"productPrice" :  8000, 
+       "code" : "KL2432",
+		"name" : "Cigarettes",
+		"price" :  8000, 
 		"quantity" : 20,
 		"icon": "add_shopping_cart",
 		"route": "product",
 		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
-        "productID" : "KL2432",
-		"productName" : "Lighter",
-		"productPrice" :  1000, 
+        "code" : "KL2432",
+		"name" : "Lighter",
+		"price" :  1000, 
 		"quantity" : 30,
 		"icon": "add_shopping_cart",
 		"route": "product",
 		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
-        "productID" : "KL2432",
-		"productName" : "Pen",
-		"productPrice" :  1000, 
+        "code" : "KL2432",
+		"name" : "Pen",
+		"price" :  1000, 
 		"quantity" : 100,
 		"icon": "add_shopping_cart",
 		"route": "product",
 		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
-        "productID" : "KL2432",
-		"productName" : "Earphones",
-		"productPrice" :  20000, 
+        "code" : "KL2432",
+		"name" : "Earphones",
+		"price" :  20000, 
 		"quantity" : 13,
+		"icon": "add_shopping_cart",
+		"route": "product",
+		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    },
+	{
+        "code" : "KL2432",
+		"name" : "Tumaco",
+		"price" :  300, 
+		"quantity" : 2,
 		"icon": "add_shopping_cart",
 		"route": "product",
 		"description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."

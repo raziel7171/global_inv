@@ -16,7 +16,7 @@ class _ProductPageState extends State<ProductPage> {
     final ProductArguments args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product: ' + args.productName),
+        title: Text('Product: ' + args.name),
       ),
       body: Container(
         margin: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -24,9 +24,9 @@ class _ProductPageState extends State<ProductPage> {
           children: [
             Row(
               children: [
-                loadImage(context, args.productName, 100, 100),
+                loadImage(context, args.name, 100, 100),
                 VerticalDivider(),
-                Text(args.productName,
+                Text(args.name,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 VerticalDivider(),
@@ -35,9 +35,7 @@ class _ProductPageState extends State<ProductPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                     children: <TextSpan>[
                       TextSpan(
-                          text:
-                              args.specificProduct['productPrice'].toString() +
-                                  "＄",
+                          text: args.specificProduct['price'].toString() + "＄",
                           style:
                               TextStyle(color: Colors.green.withOpacity(0.8)))
                     ]))
