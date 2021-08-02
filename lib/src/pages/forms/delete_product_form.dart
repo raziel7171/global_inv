@@ -19,6 +19,7 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
     return productsProvider.readProducts();
   }
 
+//se aplica la misma lógica del editar producto, primero se debe ubicar el producto y seguido se le da slide(swipe) para eliminarlo
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +33,7 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
                       context: context, delegate: DataSearch());
                   setState(() {
                     searchResult = finalResult;
-                  });
+                  }); //objeto de busqueda que nos abre la interfaz para buscar un producto, este lo retornará al principio del listado en un color más oscuro
                 },
                 icon: Icon(
                   Icons.search,
@@ -47,6 +48,7 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
                   padding: EdgeInsets.symmetric(vertical: 15),
                   color: Colors.redAccent.shade200,
                   child: Dismissible(
+                      //dismissible es una propiedad para los tiles que permite que sean descartados de la lista, funcioan perfecto para una funcionalidad de eliminar
                       key: UniqueKey(),
                       background: Container(
                           color: Colors.red,
@@ -69,7 +71,9 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
                         },
                       ),
                       confirmDismiss: (direction) async {
+                        //se debe replicar el comportamiento de elminado para el de busqueda encontrada y para la lista
                         setState(() {
+                          //llama el método deleteInteraction que se encarga de eliminar el elemento envíado searchResult y luego limpia la variable
                           _deleteInteraction(searchResult);
                           searchResult = null;
                         });
@@ -112,7 +116,9 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
 
   Widget _showProductWidget(ProductModel product) {
     return Dismissible(
-        key: UniqueKey(),
+        //como se describió al principio se debe replicar el comportamiento de dismissible para la busqueda y los tiles de la lista
+        key:
+            UniqueKey(), //unique Key hace referencia a que cada elemento que se muestra en la lista debe ser único y gracias a esto se puede trabajar cada elemento de manera independiente
         background: Container(
             color: Colors.red, child: Icon(Icons.delete, color: Colors.white)),
         child: ListTile(
@@ -121,17 +127,23 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
           leading: Text(product.quantity.toString() + 'x'),
           trailing: IconButton(
             icon: Icon(Icons.info),
-            onPressed: () {},
+            onPressed:
+                () {}, //este método se encuentra vacío ya que si no se agrega nos mostrará una advertencia
           ),
           onTap: () {
             Navigator.pushNamed(context, ProductPage.routeName,
-                arguments: ProductArguments(product.name, product));
+                arguments: ProductArguments(product.name,
+                    product)); //si es seleccionado el tile este nos redirige a la página del producto
           },
         ),
-        confirmDismiss: (direction) => _deleteInteraction(product));
+        confirmDismiss: (direction) => _deleteInteraction(
+            //usaremos el confirm dismiss llegado el caso que suceda un error este no se elimine
+            product)); //igual que con el searchResult este envía el producto seleccionado
   }
 
   Future<bool> _deleteInteraction(ProductModel product) async {
+    //se trabaja como una función asíncrona por el hecho de que va a esperar una respuesta en el futuro
+    //en este caso por que la solicitud a firebase puede fallar
     bool connectionResult = false;
     connectionResult = await productsProvider.deleteProduct(product.id);
     if (connectionResult) {
@@ -146,6 +158,7 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
     } else {
       final snackBar = SnackBar(
         content: Text(
+            //nos mostrará este mensaje si el producto falló en eliminarse en la solicitud
             'The product could not be deleted check your internet connection'),
         action: SnackBarAction(
           label: 'close',
@@ -154,6 +167,6 @@ class _DeleteProductFormState extends State<DeleteProductForm> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
-    return connectionResult;
+    return connectionResult; //nos retornará un booleano para confirmarnos el proceso
   }
 }

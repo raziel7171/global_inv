@@ -4,9 +4,7 @@ import 'package:global_inv/src/providers/products_provider.dart';
 
 class DataSearch extends SearchDelegate<ProductModel> {
   ProductsProvider productsProvider = new ProductsProvider();
-
-  final data = ["manzana", "piña", "durazno", "piña", "calabaza", "tomate"];
-  final recentData = ["durazno"];
+//para trabajar la busquedas de maneras individuales se creo un elemento llamado DataSearch, este se encargará de retornar los productos donde se necesiten en la aplicación
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -31,6 +29,7 @@ class DataSearch extends SearchDelegate<ProductModel> {
 
   @override
   Widget buildResults(BuildContext context) {
+    //se genera un futureBuilder esperando la respuesta del productProvider, que nos retornará la lista de los productos
     return FutureBuilder(
         future: productsProvider.readProducts(),
         builder:
@@ -41,7 +40,7 @@ class DataSearch extends SearchDelegate<ProductModel> {
             final finalProductsList = productsList
                 .where((specificElement) =>
                     specificElement.name.toLowerCase().contains(lowerCaseQuery))
-                .toList();
+                .toList(); //aquí se filtrará los productos cuyo nombre haga match con lo que se esté escribiendo en el campo de busqueda (se pasan los 2 a minúscula para evitar problemas)
             return ListView.builder(
                 itemBuilder: (context, index) => ListTile(
                       title: RichText(
@@ -97,6 +96,7 @@ class DataSearch extends SearchDelegate<ProductModel> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    //igualmente se contiene un listado de los productos sugeridos que no necesariamente sean los mejores candidatos a la busqueda, funciona con la misma logica
     return FutureBuilder(
         future: productsProvider.readProducts(),
         builder:
